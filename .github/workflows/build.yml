@@ -1,0 +1,24 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Login
+        run: docker login docker.pkg.github.com -u Tosuke -p "$GITHUB_LOGIN_TOKEN"
+        env:
+          GITHUB_LOGIN_TOKEN: ${{ secrets.GITHUB_LOGIN_TOKEN }}
+
+      - name: Build
+        run: docker build -t docker.pkg.github.com/tosuke/turtle-cli-docker/turtle:latest .
+
+      - name: Push
+        run: docker push docker.pkg.github.com/tosuke/turtle-cli-docker/turtle:latest
